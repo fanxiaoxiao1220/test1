@@ -1,0 +1,50 @@
+# _*_ coding:utf-8 _*_
+import csv
+import sys
+import datetime
+
+path3 = 'C:/Users/fanyi/Desktop/scb/mvp-837/test.csv'
+path4 = 'C:/Users/fanyi/Desktop/scb/mvp-837/test1.csv'
+path1 = sys.argv[1]
+path2 = sys.argv[2]
+formatFile = sys.argv[3].split(',')
+precision = sys.argv[4]
+header = []
+index = []
+precision_str = '%.{p}f'
+pfomart = precision_str.format(p=precision)
+filetoread = open(path1, 'r')
+filetowrite = open(path2, 'a', newline='')
+reader = csv.reader(filetoread)
+writer = csv.writer(filetowrite)
+
+
+def formatFiled(line, indexArr):
+    for i in indexArr:
+        a = float(line[i])
+        line[i] = pfomart % a
+        # line[i] = round(a, precision)
+
+
+def getIndex():
+    for i in range(0, len(header)):
+        for file in formatFile:
+            if file == header[i]:
+                index.append(i)
+
+print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+for line in reader:
+    print(line)
+
+    if line[0] == 'h':
+        header = line
+        getIndex()
+    if line[0] == 'd':
+        formatFiled(line, index)
+    print(line)
+    writer.writerow(line)
+filetowrite.close()
+filetoread.close()
+
+print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
